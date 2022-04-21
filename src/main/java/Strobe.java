@@ -1,6 +1,8 @@
-public class Strobe extends Effekt{
+package main.java;
 
-    @Override
+public class Strobe{
+
+    //@Override
     public void display() {
         System.out.println("I am a strobe");
     }
