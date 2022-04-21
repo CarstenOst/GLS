@@ -22,32 +22,22 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class WaveMusic
 {
-
-    // to store current position
-    Long currentFrame;
-    Clip clip;
-
-    // current status of clip
-    String status;
-
-    AudioInputStream audioInputStream;
-    static String filePath;
+    private final Clip clip;
+    private AudioInputStream audioInputStream;
+    private static String filePath;
 
     // constructor to initialize streams and clip
-    public WaveMusic()
-            throws UnsupportedAudioFileException,
-            IOException, LineUnavailableException
+    public WaveMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException
     {
         // create AudioInputStream object
-        audioInputStream =
-                AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
+        audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
 
         // create clip reference
         clip = AudioSystem.getClip();
 
         // open audioInputStream to the clip
         clip.open(audioInputStream);
-
+        // Loop
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
@@ -75,16 +65,13 @@ public class WaveMusic
             }
             sc.close();
         }
-
         catch (Exception ex)
         {
             System.out.println("Error with playing sound.");
             ex.printStackTrace();
-
         }
     }
 
-    // Work as the user enters his choice
 
     private void gotoChoice(int c)
             throws InputMismatchException
@@ -107,41 +94,37 @@ public class WaveMusic
                     System.out.println("Use numbers dummy \n" );
                     gotoChoice(5);
                 }
-
             }
         }
-
     }
 
     // Method to play the audio
     public void play()
     {
         clip.start();
-        status = "play";
     }
 
     // Method to pause the audio
     public void pause()
     {
-        if (status.equals("paused"))
+        if (!clip.isRunning())
         {
             System.out.println("audio is already paused");
             return;
         }
         clip.stop();
-        status = "paused";
     }
 
     // Method to resume the audio
     public void resumeAudio()
     {
-        if (status.equals("play"))
+        if (clip.isRunning())
         {
             System.out.println("Audio is already "+
                     "being played");
             return;
         }
-        // Actually I removed some retarded code here
+        // Actually I removed some retarded code here @author Carsten Østergaard
         this.play();
     }
 
@@ -149,7 +132,6 @@ public class WaveMusic
     public void restart()
     {
         clip.stop();
-        currentFrame = 0L;
         clip.setMicrosecondPosition(0);
         this.play();
     }
@@ -157,14 +139,12 @@ public class WaveMusic
     // Method to stop the audio
     public void stop() //throws UnsupportedAudioFileException, IOException, LineUnavailableException
     {
-        currentFrame = 0L;
         clip.stop();
         clip.close();
     }
 
     // Method to jump over a specific part
-    public void jump(long c) throws UnsupportedAudioFileException, IOException,
-            LineUnavailableException
+    public void jump(long c) throws UnsupportedAudioFileException, IOException, LineUnavailableException
     {
         long seconds = clip.getMicrosecondLength()/1_000_000L;
         if (c > 0 && c < seconds)
@@ -174,20 +154,16 @@ public class WaveMusic
             clip.stop();
             clip.close();
             resetAudioStream();
-            currentFrame = c;
             clip.setMicrosecondPosition(c);
             this.play();
         }
     }
 
     // Method to reset audio stream
-    public void resetAudioStream() throws UnsupportedAudioFileException, IOException,
-            LineUnavailableException
+    public void resetAudioStream() throws UnsupportedAudioFileException, IOException, LineUnavailableException
     {
-        audioInputStream = AudioSystem.getAudioInputStream(
-                new File(filePath).getAbsoluteFile());
+        audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
         clip.open(audioInputStream);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
-
 }
