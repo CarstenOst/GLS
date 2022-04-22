@@ -37,6 +37,7 @@ public class WaveMusic
 
         // open audioInputStream to the clip
         clip.open(audioInputStream);
+
         // Loop
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
@@ -53,14 +54,13 @@ public class WaveMusic
 
             while (true)
             {
-                System.out.println("1. pause");
-                System.out.println("2. resume");
-                System.out.println("3. restart");
-                System.out.println("4. stop");
-                System.out.println("5. Jump to specific time");
+                System.out.println("1. play/pause");
+                System.out.println("2. restart");
+                System.out.println("3. stop");
+                System.out.println("4. Jump to specific time");
                 int c = sc.nextInt();
                 audioPlayer.gotoChoice(c);
-                if (c == 4)
+                if (c == 3)
                     break;
             }
             sc.close();
@@ -77,11 +77,10 @@ public class WaveMusic
             throws InputMismatchException
     {
         switch (c) {
-            case 1 -> pause();
-            case 2 -> resumeAudio();
-            case 3 -> restart();
-            case 4 -> stop();
-            case 5 -> {
+            case 1 -> playPause();
+            case 2 -> restart();
+            case 3 -> stop();
+            case 4 -> {
                 try {
                     long seconds = clip.getMicrosecondLength()/1_000_000;
                     System.out.println("Enter time from (" + 0 +
@@ -104,36 +103,26 @@ public class WaveMusic
         clip.start();
     }
 
-    // Method to pause the audio
-    public void pause()
+    // Method to play/pause the audio
+    public void playPause()
     {
         if (!clip.isRunning())
         {
-            System.out.println("audio is already paused");
+            this.play();
             return;
         }
         clip.stop();
-    }
-
-    // Method to resume the audio
-    public void resumeAudio()
-    {
-        if (clip.isRunning())
-        {
-            System.out.println("Audio is already "+
-                    "being played");
-            return;
-        }
-        // Actually I removed some retarded code here @author Carsten Østergaard
-        this.play();
     }
 
     // Method to restart the audio
     public void restart()
     {
-        clip.stop();
+
         clip.setMicrosecondPosition(0);
-        this.play();
+
+        if(!clip.isRunning()){
+            this.play();
+        }
     }
 
     // Method to stop the audio
@@ -144,26 +133,17 @@ public class WaveMusic
     }
 
     // Method to jump over a specific part
-    public void jump(long c) throws UnsupportedAudioFileException, IOException, LineUnavailableException
+    public void jump(long c)
     {
         long seconds = clip.getMicrosecondLength()/1_000_000L;
-        if (c > 0 && c < seconds)
+        if (c >= 0 && c < seconds)
         {
+            // C is getting transformed into microseconds
             c *= 1_000_000;
 
             clip.stop();
-            clip.close();
-            resetAudioStream();
             clip.setMicrosecondPosition(c);
             this.play();
         }
-    }
-
-    // Method to reset audio stream
-    public void resetAudioStream() throws UnsupportedAudioFileException, IOException, LineUnavailableException
-    {
-        audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
-        clip.open(audioInputStream);
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 }
