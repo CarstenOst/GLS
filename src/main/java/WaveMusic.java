@@ -6,7 +6,7 @@ package main.java;
  *  Supports only AIFC, AIFF, AU, SND and WAVE formats
  *
  *  Stolen from: https://www.geeksforgeeks.org/play-audio-file-using-java/
- *
+ *  Later improved because it was baad
  */
 
 import java.io.File;
@@ -25,6 +25,7 @@ public class WaveMusic
     private final Clip clip;
     private AudioInputStream audioInputStream;
     private static String filePath;
+    private static final int MICROSECONDS_PER_SECOND = 1_000_000;
 
     // constructor to initialize streams and clip
     public WaveMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException
@@ -42,7 +43,7 @@ public class WaveMusic
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws InputMismatchException
     {
         try
         {
@@ -54,14 +55,19 @@ public class WaveMusic
 
             while (true)
             {
-                System.out.println("1. play/pause");
-                System.out.println("2. restart");
-                System.out.println("3. stop");
-                System.out.println("4. Jump to specific time");
-                int c = sc.nextInt();
-                audioPlayer.gotoChoice(c);
-                if (c == 3)
+                clearConsole();
+                consoleText();
+
+                try {
+                    int c = sc.nextInt();
+                    audioPlayer.gotoChoice(c);
+                    if (c == 3)
+                        break;
+                    // If the user doesn't use numbers
+                }catch (Exception e){
+                    print("Use numbers dummy \n");
                     break;
+                }
             }
             sc.close();
         }
@@ -72,6 +78,14 @@ public class WaveMusic
         }
     }
 
+    private static void consoleText(){
+        System.out.println("1. play/pause");
+        System.out.println("2. restart");
+        System.out.println("3. stop");
+        System.out.println("4. Jump to specific time");
+    }
+
+    private static void clearConsole() {System.out.println("\n\n\n\n\n\n\n\n\n");}
 
     private void gotoChoice(int c)
             throws InputMismatchException
@@ -80,31 +94,22 @@ public class WaveMusic
             case 1 -> playPause();
             case 2 -> restart();
             case 3 -> stop();
-            case 4 -> {
-                try {
-                    long seconds = clip.getMicrosecondLength()/1_000_000;
-                    System.out.println("Enter time from (" + 0 +
-                            " to " + seconds + ") seconds");
-                    Scanner sc = new Scanner(System.in);
-                    long c1 = sc.nextLong();
-                    jump(c1);
-                }
-                catch (Exception e) {
-                    System.out.println("Use numbers dummy \n" );
-                    gotoChoice(5);
-                }
-            }
+            case 4 -> preJump(); // The guy that originally wrote this had the preJump() code in here, which was not following common rules
         }
     }
 
+    private static void print(String s){
+        System.out.println(s);
+    }
+
     // Method to play the audio
-    public void play()
+    private void play()
     {
         clip.start();
     }
 
     // Method to play/pause the audio
-    public void playPause()
+    private void playPause()
     {
         if (!clip.isRunning())
         {
@@ -115,9 +120,8 @@ public class WaveMusic
     }
 
     // Method to restart the audio
-    public void restart()
+    private void restart()
     {
-
         clip.setMicrosecondPosition(0);
 
         if(!clip.isRunning()){
@@ -126,20 +130,42 @@ public class WaveMusic
     }
 
     // Method to stop the audio
-    public void stop() //throws UnsupportedAudioFileException, IOException, LineUnavailableException
+    private void stop() //throws UnsupportedAudioFileException, IOException, LineUnavailableException
     {
         clip.stop();
         clip.close();
     }
 
+    private void preJump(){
+
+        int sampleRate = Math.round(clip.getFramePosition()/clip.getFormat().getSampleRate());
+        long currentClipSecond = clip.getMicrosecondLength()/MICROSECONDS_PER_SECOND;
+
+        clearConsole();
+
+        System.out.println(clip.getFormat().getSampleRate());
+        System.out.println("Enter wanted time, current = (" + sampleRate + " of " + currentClipSecond + ") seconds");
+
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            long c1 = sc.nextLong();
+            jump(c1);
+        }
+        catch (Exception e) {
+            print("Use numbers dummy \n");
+            gotoChoice(4);
+        }
+    }
+
     // Method to jump over a specific part
-    public void jump(long c)
+    private void jump(long c)
     {
-        long seconds = clip.getMicrosecondLength()/1_000_000L;
+        long seconds = clip.getMicrosecondLength()/MICROSECONDS_PER_SECOND;
         if (c >= 0 && c < seconds)
         {
-            // C is getting transformed into microseconds
-            c *= 1_000_000;
+            // c is getting transformed into microseconds
+            c *= MICROSECONDS_PER_SECOND;
 
             clip.stop();
             clip.setMicrosecondPosition(c);
