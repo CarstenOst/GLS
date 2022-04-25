@@ -1,15 +1,19 @@
 package main.java;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AudioToDouble {
 
-    public static void main(String[] args)
+    public static List getAudioData(String soundFile)
     {
+
+        List soundData = new ArrayList();
         try
         {
             // Open the wav file specified as the first argument
-            WavFile wavFile = WavFile.openWavFile(new File("./music/AnimalsRemix.wav"));
+            WavFile wavFile = WavFile.openWavFile(new File(soundFile));
 
             // Display information about the wav file
             wavFile.display();
@@ -23,7 +27,6 @@ public class AudioToDouble {
             int framesRead;
             double min = Double.MAX_VALUE;
             double max = Double.MIN_VALUE;
-
             do
             {
                 // Read frames into buffer
@@ -35,7 +38,7 @@ public class AudioToDouble {
                     if (buffer[s] > max) max = buffer[s];
 
                     if (buffer[s] < min) min = buffer[s];
-                    System.out.println(buffer[s]);
+                    soundData.add(buffer[s]);
                 }
             }
             while (framesRead != 0);
@@ -50,5 +53,6 @@ public class AudioToDouble {
         {
             System.err.println(e);
         }
+        return soundData;
     }
 }

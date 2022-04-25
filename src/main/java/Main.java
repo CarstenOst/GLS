@@ -1,6 +1,11 @@
 package main.java;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.File;
+import java.io.IOException;
+
 /*
+*
 *   This program is meant to display graphics on projectors
 *   making a laser-show when accompanied by music and a hazer (smoke machine)
 *   The whole point is making it better than the already existing MusicBeam
@@ -14,6 +19,11 @@ package main.java;
 *   @since 2022.04.21 (YYYY.MM.DD)
 *
  */
-public class Main {
+import java.util.List;
 
+public class Main {
+    public static void main(String[] args) {
+        List soundData = AudioToDouble.getAudioData("./music/AnimalsRemix.wav");
+        System.out.println("Lenght is " + soundData.size());
+    }
 }
