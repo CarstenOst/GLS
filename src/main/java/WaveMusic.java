@@ -1,7 +1,5 @@
 package main.java;
 /*
- *
- *
  *  Java program to play an Audio
  *  Supports only AIFC, AIFF, AU, SND and WAVE formats
  *
@@ -23,7 +21,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class WaveMusic
 {
     private final Clip clip;
-    private AudioInputStream audioInputStream;
     private static String filePath;
     private static final int MICROSECONDS_PER_SECOND = 1_000_000;
 
@@ -31,7 +28,7 @@ public class WaveMusic
     public WaveMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException
     {
         // create AudioInputStream object
-        audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
 
         // create clip reference
         clip = AudioSystem.getClip();
@@ -47,16 +44,16 @@ public class WaveMusic
     {
         try
         {
-            filePath = "./music/AnimalsRemix.wav";
+            filePath = "./music/Drank&Drugs.wav";
             WaveMusic audioPlayer = new WaveMusic();
+            audioPlayer.clip.stop();
 
-            audioPlayer.play();
             Scanner sc = new Scanner(System.in);
 
             while (true)
             {
                 clearConsole();
-                consoleText();
+                consoleTextMenu();
 
                 try {
                     int c = sc.nextInt();
@@ -78,11 +75,12 @@ public class WaveMusic
         }
     }
 
-    private static void consoleText(){
+    private static void consoleTextMenu(){
         System.out.println("1. play/pause");
         System.out.println("2. restart");
         System.out.println("3. stop");
         System.out.println("4. Jump to specific time");
+
     }
 
     private static void clearConsole() {System.out.println("\n\n\n\n\n\n\n\n\n");}
@@ -98,7 +96,7 @@ public class WaveMusic
         }
     }
 
-    private static void print(String s){
+    private static void print(Object s){
         System.out.println(s);
     }
 
