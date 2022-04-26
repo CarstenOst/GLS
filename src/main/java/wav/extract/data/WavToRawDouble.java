@@ -1,15 +1,14 @@
-package main.java;
+package main.java.wav.extract.data;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class AudioToDouble {
+public class WavToRawDouble {
 
-    public static List getAudioData(String soundFile)
+    public static double[] getAudioData(String soundFile)
     {
 
-        List soundData = new ArrayList();
+        double[] dataSound = new double[0];
+
         try
         {
             // Open the wav file specified as the first argument
@@ -18,6 +17,7 @@ public class AudioToDouble {
             // Display information about the wav file
             wavFile.display();
 
+            dataSound = new double[((int) (wavFile.getNumChannels()*wavFile.getNumFrames()))];
             // Get the number of audio channels in the wav file
             int numChannels = wavFile.getNumChannels();
 
@@ -38,8 +38,11 @@ public class AudioToDouble {
                     if (buffer[s] > max) max = buffer[s];
 
                     if (buffer[s] < min) min = buffer[s];
-                    soundData.add(buffer[s]);
+
+                    //Store data in an array
+                    dataSound[s] = buffer[s];
                 }
+                
             }
             while (framesRead != 0);
 
@@ -53,6 +56,6 @@ public class AudioToDouble {
         {
             System.err.println(e);
         }
-        return soundData;
+        return dataSound;
     }
 }
