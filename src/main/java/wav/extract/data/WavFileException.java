@@ -1,4 +1,4 @@
-package main.java;
+package main.java.wav.extract.data;
 
 public class WavFileException extends Exception
 {

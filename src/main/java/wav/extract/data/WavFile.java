@@ -7,7 +7,7 @@
 // http://www.blitter.com/~russtopia/MIDI/~jglatt/tech/wave.htm
 
 // Version 1.0
-package main.java;
+package main.java.wav.extract.data;
 
 import java.io.*;
 
