@@ -1,8 +1,9 @@
 package main.java;
+import main.java.wav.extract.data.WavSlowToRawDouble;
+import main.java.wav.extract.data.WavToRawDouble;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
+
 
 /*
 *
@@ -19,11 +20,12 @@ import java.io.IOException;
 *   @since 2022.04.21 (YYYY.MM.DD)
 *
  */
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        List soundData = AudioToDouble.getAudioData("./music/AnimalsRemix.wav");
+        List soundData = WavSlowToRawDouble.getAudioData("./music/AnimalsRemix.wav");
         System.out.println("Lenght is " + soundData.size());
+        System.out.println("\n\n\n");
+        System.out.println("Lenght is " + WavToRawDouble.getAudioData("./music/AnimalsRemix.wav").length);
     }
 }
