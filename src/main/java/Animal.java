@@ -3,6 +3,7 @@ package main.java;
 public abstract class Animal {
     protected int weight;
     protected String name;
+    //
 
     public Animal(int weight, String name) {
         this.weight = weight;
