@@ -44,7 +44,7 @@ public class WaveMusic
     {
         try
         {
-            filePath = "./music/Drank&Drugs.wav";
+            filePath = "./music/AnimalsRemix.wav";
             WaveMusic audioPlayer = new WaveMusic();
             audioPlayer.clip.stop();
 

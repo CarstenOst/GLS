@@ -3,7 +3,7 @@ package main.java;
 public abstract class Animal {
     protected int weight;
     protected String name;
-    //
+
 
     public Animal(int weight, String name) {
         this.weight = weight;
@@ -12,7 +12,10 @@ public abstract class Animal {
 
     public abstract void makeSound();
 
-    public int getWeight(){return weight;}
+    public int getWeight()
+    {
+        return weight;
+    }
 
     public void setWeight(int weight){this.weight = weight;}
 

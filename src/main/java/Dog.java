@@ -23,13 +23,15 @@ public class Dog extends Animal {
 
         // Compare the data members and return accordingly
         return (this.weight == other.getWeight()) && name.equals(other.name);
+        // return (this.weight == other.getWeight()) && this.getName() == other.getName();
     }
+
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 31 * hash + (name == null ? 0 : name.hashCode());
-        hash = 31 * hash + this.weight;
+        hash = 32 * hash + (name == null ? 0 : name.hashCode());
+        hash = 32 * hash + this.weight;
         return hash;
     }
 
