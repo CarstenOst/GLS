@@ -1,27 +1,31 @@
 package main.java.graphics;
 
-
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import javax.swing.*;
 
 public class DrawingCanvas extends JComponent {
 
     private int width;
     private int height;
+    private SnowStorm ss1;
 
     public DrawingCanvas(int w, int h){
         width = w;
         height = h;
+        ss1 = new SnowStorm();
     }
 
+    @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-        Rectangle2D.Double r = new Rectangle2D.Double(50,70,100,40);
+        RenderingHints rh = new RenderingHints(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHints(rh);
 
-        g2d.setColor(Color.blue);
+        ss1.drawSnowStorm(g2d);
 
-        g2d.fill(r);
+
     }
 }
